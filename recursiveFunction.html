@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recursive Function</title>
+  </head>
+  <body>
+    <div id="app">
+      <div class="parent">
+        <div class="div1">
+          <h2>Problem</h2>
+          <div class="markdown">
+            <pre><code>
+        Given this snippet of code:
+        
+        <span class="code-block">const categories = [
+            {
+                name: 'category1',
+                subcategories: [
+                    {
+                        name: 'category2',
+                        subcategories: []
+                    },
+                    {
+                        name: 'category3',
+                        subcategories: [
+                            {
+                                name: 'category4',
+                                subcategories: []
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                name: 'category5',
+                subcategories: []
+            }
+        ];</span>
+                </code></pre>
+
+            <br />
+
+            <p>The task we have to solve is to implement this function:</p>
+
+            <pre><code>
+        <span class="code-block">const getCategoryPath = (categories, categoryName) => {
+            let path;
+        
+        
+            return path;
+        };</span>
+                </code></pre>
+
+            <br />
+
+            <p>Expected outputs should be:</p>
+
+            <pre><code>
+        <span class="code-block">// OUTPUT SAMPLES
+        console.log(getCategoryPath(categories, 'category4')); // should output: '/category1/category3/category4'
+        console.log(getCategoryPath(categories, 'category2')); // should output: '/category1/category2'
+        console.log(getCategoryPath(categories, 'category5')); // should output: '/category5'</span>
+                </code></pre>
+          </div>
+        </div>
+        <div class="div2">
+          <h2>Solution</h2>
+          <pre class="codeSolution">
+                <code>
+        <span class="function">const</span> getCategoryPath = (<span class="parameter">categories</span>, <span class="parameter">categoryName</span>) =&gt; {
+          <span class="keyword">let</span> path = '';
+        
+          <span class="function">const</span> traverseCategories = (<span class="parameter">currentCategories</span>, <span class="parameter">currentPath</span>) =&gt; {
+            <span class="keyword">for</span> (<span class="keyword">const</span> category <span class="keyword">of</span> <span class="parameter">currentCategories</span>) {
+                            <span class="keyword">const</span> newPath = <span class="string">`${currentPath}/${category.name}`</span>
+        
+              <span class="keyword">if</span> (<span class="parameter">category.name</span> === <span class="parameter">categoryName</span>) {
+                <span class="parameter">path</span> = <span class="parameter">newPath</span>;
+                <span class="keyword">return</span>;
+              }
+        
+              <span class="keyword">if</span> (<span class="parameter">category.subcategories.length</span>) {
+                <span class="function">traverseCategories</span>(<span class="parameter">category.subcategories</span>, <span class="parameter">newPath</span>);
+              }
+            }
+          };
+        
+          <span class="function">traverseCategories</span>(<span class="parameter">categories</span>, <span class="string">''</span>);
+        
+          <span class="keyword">return</span> <span class="parameter">path</span>;
+        };</code>
+            </pre>
+          <div class="div3">
+            <h2>Try it out!</h2>
+            <div class="markdown"></div>
+            <pre><code>
+                Output on console: {{message}} 
+                Please write it as category1, category2... category5
+                   <div class="button-row">
+                    <button class="button"@click="logCategoryPath" >Search Category</button>
+                    <input type="text" v-model="categoryName" placeholder="Enter category name" />
+                   </div>
+                    
+                
+
+                    </code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+      const app = Vue.createApp({
+        data() {
+          return {
+            categoryName: '',
+            message: "",
+            categorias: [
+              {
+                name: "category1",
+                subcategories: [
+                  {
+                    name: "category2",
+                    subcategories: [],
+                  },
+                  {
+                    name: "category3",
+                    subcategories: [
+                      {
+                        name: "category4",
+                        subcategories: [],
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                name: "category5",
+                subcategories: [],
+              },
+            ],
+          };
+        },
+        mounted() {
+          console.log("loading categories: ", this.categorias);
+        },
+        methods: {
+          logCategoryPath() {
+            const categoryPath = this.getCategoryPath(this.categorias, this.categoryName);
+            console.log(categoryPath);
+            this.message = categoryPath;
+          },
+          getCategoryPath(categories, categoryName) {
+            let path = '';
+
+            const traverseCategories = (currentCategories, currentPath) => {
+              for (const category of currentCategories) {
+                const newPath = `${currentPath}/${category.name}`;
+
+                if (category.name === categoryName) {
+                  path = newPath;
+                  return;
+                }
+
+                if (category.subcategories.length) {
+                  traverseCategories(category.subcategories, newPath);
+                }
+              }
+            };
+
+            traverseCategories(categories, '');
+
+            return path;
+          },
+        },
+      });
+
+      app.mount("#app");
+    </script>
+
+    <style>
+      /* div {
+    border: 1px solid red;
+  } */
+      .parent {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        padding: 50px;
+      }
+
+      .div1 {
+        grid-row: 1;
+      }
+
+      .div2 {
+        grid-row: 2;
+      }
+
+      @media (min-width: 1200px) {
+        .parent {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .div1 {
+          grid-row: unset;
+          grid-column: 1;
+        }
+
+        .div2 {
+          grid-row: unset;
+          grid-column: 2;
+        }
+      }
+
+      .markdown {
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        line-height: 1.5;
+        margin: 20px;
+      }
+
+      pre {
+        background-color: #f2f2f2;
+        padding: 10px;
+        font-family: Consolas, monospace;
+        font-size: 14px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+      }
+
+      code {
+        display: block;
+      }
+
+      .code-block {
+        background-color: #f9f9f9;
+        padding: 5px;
+        display: block;
+      }
+
+      p {
+        margin: 10px 0;
+      }
+
+      .codeSolution {
+        background-color: #282c34;
+        color: #abb2bf;
+        padding: 10px;
+        font-family: Consolas, monospace;
+        font-size: 14px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+      }
+
+      .keyword {
+        color: #c678dd;
+      }
+
+      .function {
+        color: #61afef;
+      }
+
+      .parameter {
+        color: #e5c07b;
+      }
+
+      .string {
+        color: #98c379;
+      }
+
+      .operator {
+        color: #56b6c2;
+      }
+      .button-row {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      .button {
+        padding: 10px 20px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      .button:hover {
+        background-color: #45a049;
+      }
+    </style>
+  </body>
+</html>
