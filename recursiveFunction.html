@@ -100,11 +100,11 @@
                 Output on console: {{message}} 
                 Please write it as category1, category2... category5
                    <div class="button-row">
-                    <button class="button"@click="logCategoryPath" >Search Category</button>
+                    <button class="button" @click="logCategoryPath" >Search Category</button>
                     <input type="text" v-model="categoryName" placeholder="Enter category name" />
                    </div>
                     
-                
+                 
 
                     </code></pre>
           </div>
@@ -112,7 +112,10 @@
       </div>
     </div>
 
-    <script src="https://unpkg.com/vue@next"></script>
+    <!-- Load Vue first -->
+    <script src="https://unpkg.com/vue@3.2.37/dist/vue.global.js"></script>
+
+    <!-- Your custom script -->
     <script>
       const app = Vue.createApp({
         data() {
@@ -182,7 +185,7 @@
       app.mount("#app");
     </script>
 
-    <style>
+       <style>
       /* div {
     border: 1px solid red;
   } */
